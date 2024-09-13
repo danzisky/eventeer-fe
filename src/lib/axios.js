@@ -31,7 +31,7 @@ api.interceptors.response.use(
   (error) => {
     // Handle error globally
     if (error.response && error.response.status === 401) {
-      window.location.href = '/login';
+      // window.location.href = '/login';
     }
 
     return Promise.reject(error);

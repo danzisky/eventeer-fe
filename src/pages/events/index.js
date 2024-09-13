@@ -1,32 +1,10 @@
 "use client";
 import EventCard from "@/components/EventCard";
 import PageHeading from "@/components/PageHeading";
-import { Button } from "@/lib/mat-tailwind";
+import { Button, Input } from "@/lib/mat-tailwind";
 import Link from "next/link";
-
-const events = [
-  {
-    id: 1,
-    title: "Music Concert",
-    description: "Join us for an amazing night of live music!",
-    date: "2024-09-30",
-    time: "7:00 PM",
-  },
-  {
-    id: 2,
-    title: "Art Exhibition",
-    description: "Explore stunning art from local and international artists.",
-    date: "2024-10-15",
-    time: "11:00 AM",
-  },
-  {
-    id: 3,
-    title: "Tech Conference",
-    description: "A day of talks and workshops on the latest in technology.",
-    date: "2024-11-05",
-    time: "9:00 AM",
-  },
-];
+import { useEffect, useState } from "react";
+import api from "@/lib/axios";
 
 function NewButton() {
   return (
@@ -39,9 +17,81 @@ function NewButton() {
 }
 
 export default function Events() {
+  const [events, setEvents] = useState([]);
+  const [filters, setFilters] = useState({
+    searchText: "",
+    city: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const params = new URLSearchParams(filters);
+        const response = await api.get(`/events?${params.toString()}`);
+        setEvents(response.data);
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, [filters]);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <div className="container mx-auto p-6">
       <PageHeading title="Upcoming Events" action={<NewButton />} />
+
+      {/* Filter Form */}
+      <div className="mb-6">
+        <form className="grid grid-cols-1 md:grid-cols-2 ld:grid-cols-3 gap-4">
+          <Input
+            label="Search"
+            name="searchText"
+            value={filters.searchText}
+            onChange={handleFilterChange}
+            className="rounded-none"
+            size="lg"
+            placeholder="Search events"
+          />
+          <Input
+            label="City"
+            name="city"
+            value={filters.city}
+            onChange={handleFilterChange}
+            className="rounded-none"
+            size="lg"
+            placeholder="Filter by city"
+          />
+          <div className="flex gap-4 max-md:col-span-2">
+            <Input
+              label="Start Date"
+              name="startDate"
+              type="date"
+              value={filters.startDate}
+              onChange={handleFilterChange}
+              className="rounded-none"
+              size="lg"
+            />
+            <Input
+              label="End Date"
+              name="endDate"
+              type="date"
+              value={filters.endDate}
+              onChange={handleFilterChange}
+              className="rounded-none"
+              size="lg"
+            />
+          </div>
+        </form>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {events.map((event) => (
           <EventCard key={event.id} event={event} />

@@ -36,6 +36,7 @@ const LoginPage = () => {
               required
               className="w-full"
               size="lg"
+              autoComplete='true'
             />
             <Input
               type="password"
@@ -45,6 +46,7 @@ const LoginPage = () => {
               required
               className="w-full"
               size="lg"
+              autoComplete='true'
             />
             <Button type="submit" color="blue" variant="filled" className="w-full">
               Login
