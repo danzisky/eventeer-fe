@@ -31,9 +31,11 @@ const Layout = ({ children }) => {
           <div className="flex items-center space-x-4">
             {!isAuthenticated ? (
               <>
-                <Button color="green" variant="filled" size="sm" className="rounded-none">
-                  Sign Up
-                </Button>
+                <Link href="/signup">
+                  <Button color="green" variant="filled" size="sm" className="rounded-none">
+                    Sign Up
+                  </Button>
+                </Link>
                 <Link href="/login">
                   <Button color="green" variant="outlined" size="sm" className="rounded-none">
                     Log In

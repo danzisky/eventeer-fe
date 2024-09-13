@@ -11,13 +11,13 @@ const SignupPage = () => {
   const router = useRouter();
   if (isAuthenticated) router.push('/');
   const dispatch = useDispatch();
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(signup({ name, email, password }));
+    dispatch(signup(username, email, password));
   };
 
   return (
@@ -30,9 +30,9 @@ const SignupPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Full Name"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
               required
               className="w-full"
               size="lg"

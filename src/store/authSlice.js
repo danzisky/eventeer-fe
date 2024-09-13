@@ -64,9 +64,9 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // Signup action
-export const signup = (name, email, password) => async (dispatch) => {
+export const signup = (username, email, password) => async (dispatch) => {
   try {
-    const { data: { token, refreshToken } } = await api.post('/auth/register', { name, email, password });
+    const { data: { token, refreshToken } } = await api.post('/auth/register', { username, email, password });
     const user = jwtDecode(token);
     dispatch(setAuth({ token, refreshToken, user }));
     localStorage.setItem('token', token);
