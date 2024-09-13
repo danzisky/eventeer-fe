@@ -1,6 +1,8 @@
 "use client";
 import EventCard from "@/components/EventCard";
-import { Typography } from "@/lib/mat-tailwind";
+import PageHeading from "@/components/PageHeading";
+import { Button } from "@/lib/mat-tailwind";
+import Link from "next/link";
 
 const events = [
   {
@@ -26,12 +28,20 @@ const events = [
   },
 ];
 
-export default function Home() {
+function NewButton() {
+  return (
+    <Link href="events/create">
+      <Button color="green" variant="filled" className="rounded-none">
+        Create New Event
+      </Button>
+    </Link>
+  );
+}
+
+export default function Events() {
   return (
     <div className="container mx-auto p-6">
-      <Typography color="green" variant="h3" className="text-left mb-8">
-        Upcoming Events
-      </Typography>
+      <PageHeading title="Upcoming Events" action={<NewButton />} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {events.map((event) => (
           <EventCard key={event.id} event={event} />

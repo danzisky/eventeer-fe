@@ -10,9 +10,15 @@
   },
   "dependencies": {
     "@material-tailwind/react": "^2.1.10",
+    "@next-devtools/core": "^0.2.0",
+    "@reduxjs/toolkit": "^2.2.7",
+    "axios": "^1.7.7",
+    "jwt-decode": "^4.0.0",
     "next": "14.2.10",
+    "next-redux-wrapper": "^8.1.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-redux": "^9.1.2"
   },
   "devDependencies": {
     "@types/node": "^20",
