@@ -2,8 +2,9 @@
 import { Button, Typography } from "@/lib/mat-tailwind";
 import Link from "next/link";
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout, rehydrateAuth } from '@/store/authSlice';
+import { useAuth } from "@/hooks/useAuth";
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const Layout = ({ children }) => {
     dispatch(rehydrateAuth());
   }, [dispatch]);
 
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const isAuthenticated = useAuth();
 
   const handleLogout = () => {
     localStorage.removeItem('token');

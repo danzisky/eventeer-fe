@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Input, Button, Typography, Card, CardBody } from "@/lib/mat-tailwind";
-import PageHeading from "../../components/PageHeading";
+import PageHeading from "@/components/PageHeading";
+import withAuth from "@/utils/authMiddleware";
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -43,7 +44,6 @@ const EventsPage = () => {
   return (
     <div className="container mx-auto p-6">
       <PageHeading title="Create New Event"/>
-      
       {/* Event Form */}
       <Card className="rounded-none">
         <CardBody>
@@ -131,4 +131,4 @@ const EventsPage = () => {
   );
 };
 
-export default EventsPage;
+export default withAuth(EventsPage);

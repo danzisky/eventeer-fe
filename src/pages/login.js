@@ -1,9 +1,16 @@
 import { useDispatch } from 'react-redux';
-import { login } from '../store/authSlice';
+import { login } from '@/store/authSlice';
 import { useState } from 'react';
 import { Input, Button, Typography, Card, CardBody, CardFooter } from '@material-tailwind/react';
+import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/router';
 
 const LoginPage = () => {
+  const isAuthenticated = useAuth();
+  const router = useRouter();
+  if (isAuthenticated) router.push('/');
+
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,7 +53,7 @@ const LoginPage = () => {
         </CardBody>
         <CardFooter className="px-8 py-4 text-center">
           <Typography variant="small" className="text-gray-600">
-            Don&apos;t have an account? <a href="/signup" className="text-blue-500">Sign up</a>
+            Don&apos;t have an account? <Link href="/signup" className="text-blue-500">Sign up</Link>
           </Typography>
         </CardFooter>
       </Card>

@@ -2,8 +2,14 @@ import { useDispatch } from 'react-redux';
 import { signup } from '@/store/authSlice';
 import { useState } from 'react';
 import { Input, Button, Typography, Card, CardBody, CardFooter } from '@material-tailwind/react';
+import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/router';
 
 const SignupPage = () => {
+  const isAuthenticated = useAuth();
+  const router = useRouter();
+  if (isAuthenticated) router.push('/');
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -56,7 +62,7 @@ const SignupPage = () => {
         </CardBody>
         <CardFooter className="px-8 py-4 text-center">
           <Typography variant="small" className="text-gray-600">
-            Already have an account? <a href="/login" className="text-blue-500">Login</a>
+            Already have an account? <Link href="/login" className="text-blue-500">Login</Link>
           </Typography>
         </CardFooter>
       </Card>
