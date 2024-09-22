@@ -6,11 +6,14 @@ import PageHeading from "@/components/PageHeading";
 import LoadingComponent from "@/components/LoadingComponent";
 import api from "@/lib/axios";
 import withAuth from "@/utils/authMiddleware";
+import { useAuth } from "@/hooks/useAuth";
 
 const EventDetailPage = () => {
   const router = useRouter();
   const { id } = router.query; // Get the event ID from the URL
   const [event, setEvent] = useState(null);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -32,6 +35,7 @@ const EventDetailPage = () => {
   };
 
   const handleDelete = async () => {
+    if (event.creator.id !== user?.id) return;
     try {
       await api.delete(`/events/${id}`);
       router.push("/events"); // Redirect to events list after deletion
@@ -41,6 +45,7 @@ const EventDetailPage = () => {
   };
 
   const handleEdit = () => {
+    if (event.creator.id !== user?.id) return;
     router.push(`/events/edit/${id}`); // Navigate to the edit page
   };
 
@@ -56,6 +61,9 @@ const EventDetailPage = () => {
           <Typography variant="h4" className="mb-4">
             {event.title}
           </Typography>
+          <Typography variant="h6" color="teal" className="mb-2 italic">
+            {event.creator.username} - {event.creator.email}
+          </Typography>
           <Typography className="text-gray-600 mb-4">{event.description}</Typography>
           <Typography variant="small" className="text-blue-gray-500">
             {new Date(event.date).toLocaleDateString()} - {event.location}
@@ -64,10 +72,10 @@ const EventDetailPage = () => {
             Participants: {event.participants.join(", ")}
           </Typography>
           <div className="mt-4 space-x-4">
-            <Button color="blue" className="rounded-none" onClick={handleEdit}>
+            <Button disabled={event.creator.id !== user?.id} color="blue" className="rounded-none" onClick={handleEdit}>
               Edit
             </Button>
-            <Button color="red" className="rounded-none" onClick={handleDelete}>
+            <Button disabled={event.creator.id !== user?.id} color="red" className="rounded-none" onClick={handleDelete}>
               Delete
             </Button>
             <Button color="blue" className="rounded-none" onClick={handleBack}>

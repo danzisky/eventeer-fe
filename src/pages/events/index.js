@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/axios";
 import Pagination from "@/components/Pagination";
 import { Typography } from "@material-tailwind/react";
+import { useAuth } from "@/hooks/useAuth";
 
 function NewButton() {
   return (
@@ -19,6 +20,8 @@ function NewButton() {
 }
 
 export default function Events() {
+  const { user } = useAuth();
+
   const [events, setEvents] = useState();
   const [filters, setFilters] = useState({
     searchText: "",
@@ -33,6 +36,7 @@ export default function Events() {
       const params = new URLSearchParams({
         ...filters,
         page,
+        user: user?.id
       });
 
       const response = await api.get(`/events?${params.toString()}`);
@@ -44,7 +48,7 @@ export default function Events() {
 
   useEffect(() => {
     fetchEvents(1);
-  }, [filters]);
+  }, [filters, user]);
 
   // Handle filter changes
   const handleFilterChange = (e) => {

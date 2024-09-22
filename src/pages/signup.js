@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
 
 const SignupPage = () => {
-  const isAuthenticated = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   if (isAuthenticated) router.push('/');
   const dispatch = useDispatch();

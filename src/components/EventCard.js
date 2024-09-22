@@ -9,6 +9,9 @@ const EventCard = ({ event }) => {
         <Typography variant="h5" color="green" className="mb-2 uppercase">
           {event.title}
         </Typography>
+        <Typography variant="h6" color="teal" className="mb-2 italic">
+          {event.creator.username} - {event.creator.email}
+        </Typography>
         <Typography className="text-gray-600 mb-4">
           <p className="line-clamp-4">
             {event.description}

@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 const withAuth = (WrappedComponent) => {
   const RequiresAuth = (props) => {
     const router = useRouter();
-    const isAuthenticated = useAuth();
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
       // If the user is not authenticated, redirect to the login page

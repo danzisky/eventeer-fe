@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 export const useAuth = (toLogin = false) => {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { token, user, isAuthenticated } = useSelector((state) => state.auth);
   const router = useRouter();
 
   useEffect(() => {
@@ -13,5 +13,9 @@ export const useAuth = (toLogin = false) => {
     }
   }, [isAuthenticated, router, toLogin]);
 
-  return isAuthenticated;
+  return {
+    token,
+    user,
+    isAuthenticated,
+  };
 };

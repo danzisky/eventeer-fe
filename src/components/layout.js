@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
     dispatch(rehydrateAuth());
   }, [dispatch]);
 
-  const isAuthenticated = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
