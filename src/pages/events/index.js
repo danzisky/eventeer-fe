@@ -5,6 +5,8 @@ import { Button, Input } from "@/lib/mat-tailwind";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";
+import Pagination from "@/components/Pagination";
+import { Typography } from "@material-tailwind/react";
 
 function NewButton() {
   return (
@@ -17,7 +19,7 @@ function NewButton() {
 }
 
 export default function Events() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState();
   const [filters, setFilters] = useState({
     searchText: "",
     city: "",
@@ -25,32 +27,38 @@ export default function Events() {
     endDate: "",
   });
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const params = new URLSearchParams(filters);
-        const response = await api.get(`/events?${params.toString()}`);
-        setEvents(response.data);
-      } catch (error) {
-        console.error("Failed to fetch events:", error);
-      }
-    };
+  // Function to fetch events based on filters and pagination
+  const fetchEvents = async (page = 1) => {
+    try {
+      const params = new URLSearchParams({
+        ...filters,
+        page,
+      });
 
-    fetchEvents();
+      const response = await api.get(`/events?${params.toString()}`);
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents(1);
   }, [filters]);
 
+  // Handle filter changes
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 h-full flex flex-col justify-between">
       <PageHeading title="Upcoming Events" action={<NewButton />} />
 
       {/* Filter Form */}
       <div className="mb-6">
-        <form className="grid grid-cols-1 md:grid-cols-2 ld:grid-cols-3 gap-4">
+        <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Input
             label="Search"
             name="searchText"
@@ -92,10 +100,23 @@ export default function Events() {
         </form>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {events.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
+      {/* Events Grid */}
+      <div className="grow">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {events?.data?.length ? (
+            events.data.map((event) => <EventCard key={event.id} event={event} />)
+          ) : (
+              <Typography className="py-8 w-max mx-auto place-self-center">No events found.</Typography>
+          )}
+        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="my-8 w-max mx-auto">
+        <Pagination
+          pagination={events?.pagination}
+          onPageChange={fetchEvents}
+        />
       </div>
     </div>
   );
