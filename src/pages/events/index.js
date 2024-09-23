@@ -81,7 +81,7 @@ export default function Events() {
             size="lg"
             placeholder="Filter by city"
           />
-          <div className="flex gap-4 max-md:col-span-2">
+          <div className="flex flex-col md:flex-row gap-4 max-md:col-span-2">
             <Input
               label="Start Date"
               name="startDate"

@@ -97,4 +97,17 @@ export const rehydrateAuth = () => async (dispatch) => {
   }
 };
 
+// Handle logout
+export const handleLogout = () => (dispatch) => {
+  const refreshToken = localStorage.getItem('refreshToken');
+
+  api.post('/auth/logout', { refreshToken })
+    .then(() => {
+      dispatch(logout());
+    })
+    .catch((error) => {
+      console.error('Logout failed:', error);
+    });
+};
+
 export default authSlice.reducer;

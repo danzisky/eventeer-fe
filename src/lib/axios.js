@@ -1,12 +1,28 @@
 import axios from 'axios';
+import store from '@/store';
+import { refreshAccessToken, logout } from '@/store/authSlice';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // Base API URL
+  baseURL: 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+// Function to subscribe to the refresh process
+function subscribeTokenRefresh(cb) {
+  refreshSubscribers.push(cb);
+}
+
+// Function to refresh tokens
+function onRefreshed(token) {
+  refreshSubscribers.map((cb) => cb(token));
+}
+
+// Axios request interceptor
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -17,21 +33,44 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => {
-    // Hhandle error before sending the request
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Add response interceptor to handle errors globally
+// Axios response interceptor to refresh token on 401 error
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Handle error globally
-    if (error.response && error.response.status === 401) {
-      // window.location.href = '/login';
+  (response) => response,
+  async (error) => {
+    const { response: { status } = {} } = error;
+    const originalRequest = error.config;
+
+    if (status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Add request to queue if refresh is already happening
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((token) => {
+            originalRequest.headers['Authorization'] = `Bearer ${token}`;
+            resolve(axios(originalRequest));
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const newToken = await store.dispatch(refreshAccessToken()); // Dispatch refresh action
+
+        isRefreshing = false;
+        onRefreshed(newToken);
+        refreshSubscribers = [];
+
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        return axios(originalRequest);
+      } catch (err) {
+        isRefreshing = false;
+        store.dispatch(logout()); // Log out user if refresh fails
+        return Promise.reject(error);
+      }
     }
 
     return Promise.reject(error);

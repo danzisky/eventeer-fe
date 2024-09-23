@@ -3,21 +3,21 @@ import { Button, Typography } from "@/lib/mat-tailwind";
 import Link from "next/link";
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { logout, rehydrateAuth } from '@/store/authSlice';
+import { rehydrateAuth, handleLogout } from '@/store/authSlice';
 import { useAuth } from "@/hooks/useAuth";
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
 
+  // Rehydrate auth state on component mount
   useEffect(() => {
     dispatch(rehydrateAuth());
   }, [dispatch]);
 
   const { isAuthenticated } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    dispatch(logout());
+  const onLogoutClick = () => {
+    dispatch(handleLogout());
   };
 
   return (
@@ -44,7 +44,7 @@ const Layout = ({ children }) => {
               </>
             ) : (
               <Button
-                onClick={handleLogout}
+                  onClick={onLogoutClick}
                 color="green"
                 variant="outlined"
                 size="sm"

@@ -12,8 +12,8 @@ const LoginPage = () => {
   if (isAuthenticated) router.push('/');
 
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('john@example.com');
+  const [password, setPassword] = useState('password');
 
   const handleSubmit = (e) => {
     e.preventDefault();
